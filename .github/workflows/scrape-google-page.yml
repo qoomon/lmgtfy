@@ -1,0 +1,25 @@
+name: 'scrape-google-page'
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 0 * * *
+
+permissions:
+  contents: read
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        wget \
+          --no-parent \
+          --recursive \
+          --level=1 \
+          -erobots=off \
+          --page-requisites \
+          --user-agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36" \
+          --accept htm,html,css,js,json,gif,jpeg,jpg,bmp,png,webp \
+          --convert-links \
+          https://www.google.com
