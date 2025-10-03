@@ -22,7 +22,7 @@ jobs:
           --user-agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36" \
           --accept htm,html,css,js,json,gif,jpeg,jpg,bmp,png,webp \
           --convert-links \
-          --directory-prefix=downloaded_site
+          --directory-prefix=downloaded_site \
           https://www.google.com
     - uses: actions/upload-artifact@v4
       with:
