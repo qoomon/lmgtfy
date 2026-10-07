@@ -36,9 +36,26 @@
     </div>
 </div>
 
-
 <script type="module">
-    const query = new URL(location).searchParams.get('q');
+    function toBase64(str) {
+        const bytes = new TextEncoder().encode(str);
+        const binString = Array.from(bytes, (byte) => String.fromCharCode(byte)).join("");
+        return btoa(binString);
+    }
+
+    function fromBase64(base64) {
+        try {
+            const binString = atob(base64);
+            const bytes = Uint8Array.from(binString, (m) => m.charCodeAt(0));
+            return new TextDecoder().decode(bytes);
+        } catch {
+            return null;
+        }
+    }
+
+    const rawParam = new URL(location).searchParams.get('q');
+    const query = rawParam ? fromBase64(rawParam) : null;
+
     if (query) {
         document.documentElement.innerHTML = await fetch('./google.html').then(res => res.text());
         document.querySelector('body').style.cursor = "none !important";
@@ -105,8 +122,8 @@
                 code: 'Enter',
                 keyCode: 13,
                 which: 13,
-                bubbles: true, // Allow the event to bubble up the DOM tree
-                cancelable: true // Allow the event to be canceled
+                bubbles: true,
+                cancelable: true
             }));
         }
 
@@ -114,8 +131,8 @@
         window.location = `https://google.com/search?q=${encodeURIComponent(query)}`
     } else {
         document.addEventListener('DOMContentLoaded', () => {
-            const query = new URL(location).searchParams.get('q');
-            if (query) {
+            const rawParam = new URL(location).searchParams.get('q');
+            if (rawParam) {
                 return;
             }
             document.body.style.display = null;
@@ -132,7 +149,8 @@
 
             searchButton.addEventListener('click', async () => {
                 const url = new URL(location);
-                url.searchParams.append('q', searchInput.value);
+                const encodedQuery = toBase64(searchInput.value);
+                url.searchParams.set('q', encodedQuery);
                 await navigator.clipboard.writeText(url.href);
                 alert('LMGTFY Link:\n' + url.href + '\n\nLink copied to clipboard!');
                 location.href = url.toString();
@@ -193,3 +211,4 @@
     }</style>
 </a>
 </body>
+</html>
