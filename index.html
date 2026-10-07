@@ -38,16 +38,12 @@
 
 <script type="module">
     function toBase64(str) {
-        const bytes = new TextEncoder().encode(str);
-        const binString = Array.from(bytes, (byte) => String.fromCharCode(byte)).join("");
-        return btoa(binString);
+       return new TextEncoder().encode(str).toBase64({ omitPadding: true });
     }
 
     function fromBase64(base64) {
         try {
-            const binString = atob(base64);
-            const bytes = Uint8Array.from(binString, (m) => m.charCodeAt(0));
-            return new TextDecoder().decode(bytes);
+            return new TextDecoder().decode(Uint8Array.fromBase64(b64));
         } catch {
             return null;
         }
